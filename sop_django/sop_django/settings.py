@@ -15,8 +15,8 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-STATIC_DIR = os.path.join(BASE_DIR,'ORS/static')
-ORS_TEMPLATE = os.path.join(BASE_DIR,'ORS/template')
+STATIC_DIR = os.path.join(BASE_DIR, 'ORS/static')
+ORS_TEMPLATE = os.path.join(BASE_DIR, 'ORS/template')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -83,7 +83,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'sop_django.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -95,7 +94,7 @@ DATABASES = {
         'PASSWORD': 'root',
         'HOST': 'localhost',
         'PORT': '3306',
-        'POOL_OPTIONS':{ 'POOL_SIZE':10, 'MAX_OVERFLOW':10 }
+        'POOL_OPTIONS': {'POOL_SIZE': 10, 'MAX_OVERFLOW': 10}
     }
 }
 
@@ -114,9 +113,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'jyotipipariya@gmail.com'
-EMAIL_HOST_PASSWORD = 'nucrzqkfdqhodwkb'
-
+EMAIL_HOST_USER = 'rajeshkanha16@gmail.com'
+EMAIL_HOST_PASSWORD = 'Password'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -136,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -148,12 +145,11 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR, ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
