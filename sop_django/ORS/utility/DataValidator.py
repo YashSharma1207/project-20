@@ -73,8 +73,12 @@ class DataValidator:
         else:
             return True
 
-
-
+    @classmethod
+    def isInt(self, val):
+        if (val == 0):
+            return False
+        else:
+            return True
 
 
 

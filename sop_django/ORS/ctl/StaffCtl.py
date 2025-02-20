@@ -42,7 +42,7 @@ class StaffCtl(BaseCtl):
             self.form['error'] = True
         else:
             if (DataValidator.isalphacehck(self.form['fullName'])):
-                inputError['fullName'] = "full contains only letters"
+                inputError['fullName'] = "Full Name contains only letters"
                 self.form['error'] = True
 
         if (DataValidator.isNull(self.form['joiningDate'])):

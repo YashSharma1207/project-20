@@ -456,3 +456,15 @@ class Staff(models.Model):
 
     class Meta:
         db_table = 'sos_staff'
+
+class Position(models.Model):
+    identifier = models.CharField(max_length=50)
+    designation = models.CharField(max_length=50)
+    openingDate = models.DateField()
+    requiredExperience = models.IntegerField()
+    condition = models.TextField()
+
+    class Meta:
+        db_table = 'sos_position'
+
+
