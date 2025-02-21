@@ -4,11 +4,24 @@ from django.shortcuts import render
 from ORS.utility.DataValidator import DataValidator
 from service.models import Student
 from service.service.StudentService import StudentService
+from ..utility.HTMLUtility import HTMLUtility
+
 
 class StudentCtl(BaseCtl):
-    def preload(self, request):
-        self.page_list = CollegeService().preload()
-        self.preload_data = self.page_list
+
+    def preload(self, request, params):
+        self.form["college_ID"] = request.POST.get('college_ID', 0)
+
+        if (params['id'] > 0):
+            obj = self.get_service().get(params['id'])
+            self.form["college_ID"] = obj.college_ID
+        self.dynamic_preload = CollegeService().preload()
+
+        self.form["preload"]["college"] = HTMLUtility.get_list_from_objects(
+            'college_ID',
+            self.form["college_ID"],
+            self.dynamic_preload
+        )
 
     def request_to_form(self, requestForm):
         self.form['id'] = requestForm['id']
@@ -20,7 +33,7 @@ class StudentCtl(BaseCtl):
         self.form['college_ID'] = requestForm['college_ID']
 
     def model_to_form(self, obj):
-        if (obj==None):
+        if (obj == None):
             return
         self.form['id'] = obj.id
         self.form['firstName'] = obj.firstName
@@ -34,7 +47,7 @@ class StudentCtl(BaseCtl):
     def form_to_model(self, obj):
         c = CollegeService().get(self.form['college_ID'])
         pk = int(self.form['id'])
-        if (pk>0):
+        if (pk > 0):
             obj.id = pk
         obj.firstName = self.form['firstName']
         obj.lastName = self.form['lastName']
@@ -70,7 +83,7 @@ class StudentCtl(BaseCtl):
             self.form['error'] = True
         else:
             if (DataValidator.isDate(self.form['dob'])):
-                inputError['dob']= "Incorrect Date, should be YYYY-MM-DD"
+                inputError['dob'] = "Incorrect Date, should be YYYY-MM-DD"
                 self.form['error'] = True
 
         if (DataValidator.isNull(self.form['mobileNumber'])):
@@ -101,17 +114,17 @@ class StudentCtl(BaseCtl):
         if (params['id'] > 0):
             r = self.get_service().get(params['id'])
             self.model_to_form(r)
-        res = render(request, self.get_template(), {'form':self.form, 'collegeList':self.preload_data})
+        res = render(request, self.get_template(), {'form': self.form})
         return res
 
     def submit(self, request, params={}):
-        if (params['id']>0):
+        if (params['id'] > 0):
             pk = params['id']
-            dup = self.get_service().get_model().objects.exclude(id=pk).filter(email = self.form['email'])
-            if dup.count()>0:
+            dup = self.get_service().get_model().objects.exclude(id=pk).filter(email=self.form['email'])
+            if dup.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Email already exists"
-                res = render(request, self.get_template(),{'form':self.form,'collegeList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(Student())
                 self.get_service().save(r)
@@ -119,13 +132,13 @@ class StudentCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN UPDATED SUCCESSFULLY"
-                res = render(request, self.get_template(),{'form':self.form,'collegeList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
         else:
-            duplicate = self.get_service().get_model().objects.filter(email = self.form['email'])
-            if duplicate.count()>0:
+            duplicate = self.get_service().get_model().objects.filter(email=self.form['email'])
+            if duplicate.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Email already exists"
-                res = render(request, self.get_template(),{'form':self.form,'collegeList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(Student())
                 self.get_service().save(r)
@@ -133,10 +146,8 @@ class StudentCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN SAVED SUCCESSFULLY"
-                res = render(request, self.get_template(),{'form':self.form,'collegeList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
         return res
-
-
 
     # Template html of Student Page
     def get_template(self):
@@ -144,22 +155,3 @@ class StudentCtl(BaseCtl):
 
     def get_service(self):
         return StudentService()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

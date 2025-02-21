@@ -1,4 +1,3 @@
-
 from django.shortcuts import render, redirect
 from ORS.utility.DataValidator import DataValidator
 from django.http import HttpResponse
@@ -6,13 +5,36 @@ from .BaseCtl import BaseCtl
 from service.models import User
 from service.service.UserService import UserService
 from service.service.RoleService import RoleService
+from ..utility.HTMLUtility import HTMLUtility
+
 
 class UserCtl(BaseCtl):
-    def preload(self, request):
-        self.page_list = RoleService().preload()
-        self.preloadData = self.page_list
+    def preload(self, request, params):
 
-    # Polulate Form from Http request
+        self.form["gender"] = request.POST.get('gender', '')
+        self.form["role_Id"] = request.POST.get('role_Id', 0)
+
+        if (params['id'] > 0):
+            obj = self.get_service().get(params['id'])
+            self.form["gender"] = obj.gender
+            self.form["role_Id"] = obj.role_Id
+
+        self.static_preload = {"Male": "Male", "Female": "Female"}
+        self.dynamic_preload = RoleService().preload()
+
+        self.form["preload"]["gender"] = HTMLUtility.get_list_from_dict(
+            'gender',
+            self.form["gender"],
+            self.static_preload
+        )
+        self.form["preload"]["role"] = HTMLUtility.get_list_from_objects(
+            'role_Id',
+            self.form["role_Id"],
+            self.dynamic_preload
+        )
+
+        # Polulate Form from Http request
+
     def request_to_form(self, requestForm):
         self.form["id"] = requestForm["id"]
         self.form["firstName"] = requestForm["firstName"]
@@ -26,8 +48,8 @@ class UserCtl(BaseCtl):
         self.form["mobilenumber"] = requestForm["mobilenumber"]
         self.form["role_Id"] = requestForm["role_Id"]
 
-    # Polulate Form from model
-    # GET-DISPLAY method calls this function
+        # Polulate Form from model
+        # GET-DISPLAY method calls this function
 
     def model_to_form(self, obj):
         if (obj == None):
@@ -45,7 +67,8 @@ class UserCtl(BaseCtl):
         self.form["role_Id"] = obj.role_Id
         self.form["role_Name"] = obj.role_Name
 
-    # Convert form into module
+        # Convert form into module
+
     def form_to_model(self, obj):
         c = RoleService().get(self.form['role_Id'])
         pk = int(self.form['id'])
@@ -64,10 +87,10 @@ class UserCtl(BaseCtl):
         obj.role_Name = c.name
         return obj
 
-    # Validate form
+        # Validate form
 
     def input_validation(self):
-        super ().input_validation()
+        super().input_validation()
         inputError = self.form["inputError"]
         if (DataValidator.isNull(self.form["firstName"])):
             inputError["firstName"] = " Name can not be null"
@@ -101,12 +124,12 @@ class UserCtl(BaseCtl):
             self.form["error"] = True
         else:
             if (DataValidator.isDate(self.form['dob'])):
-                inputError['dob']= "Incorrect Date, should be YYYY-MM-DD"
+                inputError['dob'] = "Incorrect Date, should be YYYY-MM-DD"
                 self.form['error'] = True
 
         if (DataValidator.isNull(self.form['gender'])):
             inputError['gender'] = "Gender can not be null"
-            self.form['error']  = True
+            self.form['error'] = True
         if (DataValidator.isNull(self.form["address"])):
             inputError["address"] = "Address can not be null"
             self.form["error"] = True
@@ -116,7 +139,7 @@ class UserCtl(BaseCtl):
         else:
             if (DataValidator.ismobilecheck(self.form['mobilenumber'])):
                 inputError['mobilenumber'] = "Mobile No should start with 6,7,8,9"
-                self.form['error'] =  True
+                self.form['error'] = True
         if (DataValidator.isNull(self.form['role_Id'])):
             inputError['role_Id'] = "Role can not be null"
             self.form['error'] = True
@@ -126,14 +149,16 @@ class UserCtl(BaseCtl):
         return self.form['error']
 
         # Display User Page
+
     def display(self, request, params={}):
         if (params['id'] > 0):
             r = self.get_service().get(params['id'])
             self.model_to_form(r)
-        res = render(request, self.get_template(), {'form': self.form, 'roleList': self.preloadData})
+        res = render(request, self.get_template(), {'form': self.form})
         return res
 
         # Submit User Page
+
     def submit(self, request, params={}):
         if (params['id'] > 0):
             pk = params['id']
@@ -141,7 +166,7 @@ class UserCtl(BaseCtl):
             if dup.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Login Id already exists"
-                res = render(request, self.get_template(), {'form': self.form, 'roleList': self.preloadData})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(User())
                 self.get_service().save(r)
@@ -149,13 +174,13 @@ class UserCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN UPDATED SUCCESSFULLY"
-                res = render(request, self.get_template(), {'form': self.form, 'roleList': self.preloadData})
+                res = render(request, self.get_template(), {'form': self.form})
         else:
             duplicate = self.get_service().get_model().objects.filter(login_id=self.form['login_id'])
             if duplicate.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Login Id already exists"
-                res = render(request, self.get_template(), {'form': self.form, 'roleList': self.preloadData})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(User())
                 self.get_service().save(r)
@@ -163,7 +188,7 @@ class UserCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN SAVED SUCCESSFULLY"
-                res = render(request, self.get_template(), {'form': self.form, 'roleList': self.preloadData})
+                res = render(request, self.get_template(), {'form': self.form})
         return res
 
     def get_template(self):
@@ -171,71 +196,3 @@ class UserCtl(BaseCtl):
 
     def get_service(self):
         return UserService()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

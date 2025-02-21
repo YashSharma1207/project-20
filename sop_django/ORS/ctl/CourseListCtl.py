@@ -56,14 +56,12 @@ class CourseListCtl(BaseCtl):
     def deleteRecord(self, request, params={}):
         self.form['pageNo'] = CourseListCtl.count
         if (bool(self.form['ids']) == False):
-            print("qqqqqaaaaaaaaaaaaaaaaaaaaaaaqqqq ")
             self.form['error'] = True
             self.form['messege'] = "Please Select at least one Checkbox"
             record = self.get_service().search(self.form)
             self.page_list = record['data']
             res = render(request, self.get_template(), {'pageList': self.page_list, 'form': self.form})
         else:
-            print("qqqqqqqqqq-------------------------------")
             for ids in self.form['ids']:
                 record = self.get_service().search(self.form)
                 self.page_list = record['data']

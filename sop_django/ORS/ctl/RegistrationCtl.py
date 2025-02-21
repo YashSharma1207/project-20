@@ -7,12 +7,21 @@ from service.service.UserService import UserService
 from service.service.RoleService import RoleService
 from service.service.EmailService import EmailService
 from service.service.EmailMessege import EmailMessege
+from ..utility.HTMLUtility import HTMLUtility
 
 
 class RegistrationCtl(BaseCtl):
-    def preload(self, request):
-        self.page_list = RoleService().preload()
-        self.preloadData = self.page_list
+    def preload(self, request, params):
+
+        self.form["gender"] = request.POST.get('gender', '')
+
+        self.static_preload = {"Male": "Male", "Female": "Female"}
+
+        self.form["preload"]["gender"] = HTMLUtility.get_list_from_dict(
+            'gender',
+            self.form["gender"],
+            self.static_preload
+        )
 
     # Populate Form from Http Request
     def request_to_form(self, requestForm):
@@ -131,7 +140,7 @@ class RegistrationCtl(BaseCtl):
         if params['id'] > 0:
             r = self.get_service().get(params['id'])
             self.model_to_form(r)
-        res = render(request, self.get_template(), {"form": self.form, "roleList": self.preloadData})
+        res = render(request, self.get_template(), {"form": self.form})
         return res
 
     # Submit Role Page
@@ -145,21 +154,27 @@ class RegistrationCtl(BaseCtl):
             self.form['messege'] = "Login ID Already Exists"
             res = render(request, self.get_template(), {'form': self.form})
         else:
+            print("ssssssssss")
             emsg = EmailMessege()
             emsg.to = [self.form['login_id']]
             e = {}
             e['login'] = self.form['login_id']
             e['password'] = self.form['password']
             emsg.subject = "ORS Registration Successful"
+
             mailResponse = EmailService.send(emsg, 'signUp', e)
-            if mailResponse == 1:
+            print("mailResponse:", mailResponse)  # Debugging step
+            if mailResponse:
+                print("aaaabbbb")
                 r = self.form_to_model(User())
                 self.get_service().save(r)
                 self.form['id'] = r.id
                 self.form['error'] = False
                 self.form['messege'] = "YOUR REGISTERATION HAS BEEN COMPLETED SUCCESSFULLY"
                 res = render(request, self.get_template(), {'form': self.form})
+                print("hhhhh")
             else:
+                print("vvvv")
                 self.form['error'] = True
                 self.form['messege'] = "Please Check Your Internet Connection"
                 res = render(request, self.get_template(), {'form': self.form})
@@ -172,51 +187,3 @@ class RegistrationCtl(BaseCtl):
 
     def get_service(self):
         return UserService()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -65,11 +65,7 @@
                     </div>
                     <label class="col-lg-2 form-control-label">Gender<span style="color:red;">*</span></label>
                     <div class="col-lg-4">
-                        <select class="form-control" name="gender">
-                            <option value="{{ form.gender }}">{{form.gender}}</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                        </select>
+                        {{ form.preload.gender|safe }}
                         <span style="color:red">{{ form.inputError.gender }}</span>
                     </div>
                 </div>
@@ -82,13 +78,7 @@
                     </div>
                     <label class="col-lg-2 form-control-label">Role Name<span style="color:red;">*</span></label>
                     <div class="col-lg-4">
-
-                        <select class="form-control" name="role_Id">
-                            <option value="{{form.role_Id}}">{{ form.role_Name }}</option>
-                                {% for role in roleList %}
-                                <option value="{{ role.id }}">{{ role.name }}</option>
-                                {% endfor %}
-                        </select>
+                        {{ form.preload.role|safe }}
                         <span style="color:red;">{{ form.inputError.role_Id }}</span>
                     </div>
                 </div>

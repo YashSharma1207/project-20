@@ -5,11 +5,26 @@ from service.models import Course, Subject
 from service.forms import SubjectForm
 from service.service.SubjectService import SubjectService
 from service.service.CourseService import CourseService
+from ..utility.HTMLUtility import HTMLUtility
+
 
 class SubjectCtl(BaseCtl):
-    def preload(self, request):
-        self.page_list = CourseService().preload()
-        self.preload_data = self.page_list
+
+    def preload(self, request, params):
+
+        self.form["course_ID"] = request.POST.get('course_ID', 0)
+
+        if (params['id'] > 0):
+            obj = self.get_service().get(params['id'])
+            self.form["course_ID"] = obj.course_ID
+
+        self.dynamic_preload = CourseService().preload()
+
+        self.form["preload"]["course"] = HTMLUtility.get_list_from_objects(
+            'course_ID',
+            self.form["course_ID"],
+            self.dynamic_preload
+        )
 
     def request_to_form(self, requestForm):
         self.form['id'] = requestForm['id']
@@ -18,7 +33,7 @@ class SubjectCtl(BaseCtl):
         self.form['course_ID'] = requestForm['course_ID']
 
     def model_to_form(self, obj):
-        if (obj==None):
+        if (obj == None):
             return
         self.form['id'] = obj.id
         self.form['subjectName'] = obj.subjectName
@@ -29,7 +44,7 @@ class SubjectCtl(BaseCtl):
     def form_to_model(self, obj):
         c = CourseService().get(self.form['course_ID'])
         pk = int(self.form['id'])
-        if (pk>0):
+        if (pk > 0):
             obj.id = pk
         obj.subjectName = self.form['subjectName']
         obj.subjectDescription = self.form['subjectDescription']
@@ -61,21 +76,21 @@ class SubjectCtl(BaseCtl):
         return self.form['error']
 
     def display(self, request, params={}):
-        if (params['id']>0):
+        if (params['id'] > 0):
             id = params['id']
             r = self.get_service().get(id)
             self.model_to_form(r)
-        res = render(request,self.get_template(),{'form':self.form,'courseList':self.preload_data})
+        res = render(request, self.get_template(), {'form': self.form})
         return res
 
     def submit(self, request, params={}):
-        if (params['id']>0):
+        if (params['id'] > 0):
             pk = params['id']
-            dup = self.get_service().get_model().objects.exclude(id=pk).filter(subjectName = self.form['subjectName'])
-            if dup.count()>0:
+            dup = self.get_service().get_model().objects.exclude(id=pk).filter(subjectName=self.form['subjectName'])
+            if dup.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Subject Name already exists"
-                res = render(request,self.get_template(),{'form':self.form,'courseList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(Subject())
                 self.get_service().save(r)
@@ -83,13 +98,13 @@ class SubjectCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN UPDATED SUCCESSFULLY"
-                res = render(request,self.get_template(),{'form':self.form,'courseList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
         else:
-            duplicate = self.get_service().get_model().objects.filter(subjectName = self.form['subjectName'])
-            if duplicate.count()>0:
+            duplicate = self.get_service().get_model().objects.filter(subjectName=self.form['subjectName'])
+            if duplicate.count() > 0:
                 self.form['error'] = True
                 self.form['messege'] = "Subject Name already exists"
-                res = render(request,self.get_template(),{'form':self.form,'courseList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
             else:
                 r = self.form_to_model(Subject())
                 self.get_service().save(r)
@@ -97,9 +112,8 @@ class SubjectCtl(BaseCtl):
 
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN SAVED SUCCESSFULLY"
-                res = render(request,self.get_template(),{'form':self.form,'courseList':self.preload_data})
+                res = render(request, self.get_template(), {'form': self.form})
         return res
-
 
     # Template html of Subject Page
     def get_template(self):

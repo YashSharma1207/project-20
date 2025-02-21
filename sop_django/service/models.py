@@ -1,10 +1,17 @@
 from django.db import models
 
-
 # Create your models here.
 class Role(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.name
+
+
 
     def to_json(self):
         data = {
@@ -17,7 +24,6 @@ class Role(models.Model):
     class Meta:
         db_table = 'sos_role'
 
-
 class User(models.Model):
     firstName = models.CharField(max_length=50)
     lastName = models.CharField(max_length=50)
@@ -25,11 +31,19 @@ class User(models.Model):
     password = models.CharField(max_length=20)
     confirmpassword = models.CharField(max_length=20, default='')
     dob = models.DateField(max_length=20)
-    address = models.CharField(max_length=50, default='')
-    gender = models.CharField(max_length=50, default='')
-    mobilenumber = models.CharField(max_length=50, default='')
+    address = models.CharField(max_length=50, default = '')
+    gender = models.CharField(max_length=50,default='')
+    mobilenumber = models.CharField(max_length=50,default='')
     role_Id = models.IntegerField()
     role_Name = models.CharField(max_length=50)
+
+    def get_key(self):
+        return self.id
+
+    def get_value(self):
+        return self.firstName + ' ' + self.lastName
+
+
 
     def to_json(self):
         data = {
@@ -52,13 +66,18 @@ class User(models.Model):
     class Meta:
         db_table = 'sos_user'
 
-
 class College(models.Model):
     collegeName = models.CharField(max_length=50)
     collegeAddress = models.CharField(max_length=50)
     collegeState = models.CharField(max_length=50)
     collegeCity = models.CharField(max_length=20)
     collegePhoneNumber = models.CharField(max_length=20)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.collegeName
 
     def to_json(self):
         data = {
@@ -85,6 +104,12 @@ class Course(models.Model):
     courseName = models.CharField(max_length=50)
     courseDescription = models.CharField(max_length=100)
     courseDuration = models.CharField(max_length=100)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.courseName
 
     def to_json(self):
         data = {
@@ -113,6 +138,12 @@ class Faculty(models.Model):
     subjectName = models.CharField(max_length=50)
     course_ID = models.IntegerField()
     courseName = models.CharField(max_length=50)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.name
 
     def to_json(self):
         data = {
@@ -206,14 +237,13 @@ class Subject(models.Model):
     class Meta:
         db_table = 'sos_subject'
 
-
 class Vehicle(models.Model):
     vehicleId = models.IntegerField()
     vehicleName = models.CharField(max_length=50)
     vehicleType = models.CharField(max_length=50)
     purchaseDate = models.DateField(max_length=20)
-    buyerName = models.CharField(max_length=50)
-    tid = models.IntegerField(default=0)
+    buyerName= models.CharField(max_length=50)
+    tid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -231,13 +261,12 @@ class Vehicle(models.Model):
     class Meta:
         db_table = 'sos_vehicle'
 
-
 class ShoppingCart(models.Model):
     name = models.CharField(max_length=50)
     product = models.CharField(max_length=50)
     date = models.DateField(max_length=20)
-    quantity = models.IntegerField(default=0)
-    pid = models.IntegerField(default=0)
+    quantity= models.IntegerField(default=0)
+    pid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -254,13 +283,12 @@ class ShoppingCart(models.Model):
     class Meta:
         db_table = 'sos_shoppingcart'
 
-
 class Order(models.Model):
-    quantity = models.IntegerField(default=0)
+    quantity= models.IntegerField(default=0)
     product = models.CharField(max_length=50)
     date = models.DateField(max_length=20)
-    amount = models.IntegerField(default=0)
-    pid = models.IntegerField(default=0)
+    amount= models.IntegerField(default=0)
+    pid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -277,15 +305,14 @@ class Order(models.Model):
     class Meta:
         db_table = 'sos_order'
 
-
 class Issue(models.Model):
     openDate = models.DateField(max_length=20)
-    title = models.CharField(max_length=50)
+    title= models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    assignTo = models.CharField(max_length=50)
-    status = models.CharField(max_length=50)
-    sid = models.IntegerField(default=0)
-    aid = models.IntegerField(default=0)
+    assignTo= models.CharField(max_length=50)
+    status=models.CharField(max_length=50)
+    sid=models.IntegerField(default=0)
+    aid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -295,7 +322,7 @@ class Issue(models.Model):
             'description': self.description,
             'assignTo': self.assignTo,
             'status': self.status,
-            'sid': self.sid,
+            'sid':self.sid,
             'aid': self.aid
         }
         return data
@@ -303,15 +330,14 @@ class Issue(models.Model):
     class Meta:
         db_table = 'sos_issue'
 
-
 class Task(models.Model):
     creationDate = models.DateField(max_length=20)
-    taskTitle = models.CharField(max_length=50)
+    taskTitle= models.CharField(max_length=50)
     details = models.CharField(max_length=200)
-    assignTo = models.CharField(max_length=50)
-    taskStatus = models.CharField(max_length=50)
-    aid = models.IntegerField(default=0)
-    sid = models.IntegerField(default=0)
+    assignTo= models.CharField(max_length=50)
+    taskStatus=models.CharField(max_length=50)
+    aid=models.IntegerField(default=0)
+    sid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -322,13 +348,12 @@ class Task(models.Model):
             'assignTo': self.assignTo,
             'taskStatus': self.taskStatus,
             'aid': self.aid,
-            'sid': self.sid,
+            'sid':self.sid,
         }
         return data
 
     class Meta:
         db_table = 'sos_task'
-
 
 class PortfolioManagement(models.Model):
     portfolioName = models.CharField(max_length=50)
@@ -352,12 +377,11 @@ class PortfolioManagement(models.Model):
     class Meta:
         db_table = 'sos_portfoliomanagement'
 
-
 class Staffmember(models.Model):
     fullName = models.CharField(max_length=50)
     joiningDate = models.DateField(max_length=20)
     division = models.CharField(max_length=50)
-    previousEmployer = models.CharField(max_length=50)
+    previousEmployer=models.CharField(max_length=50)
     did = models.IntegerField(default=0)
 
     def to_json(self):
@@ -375,13 +399,12 @@ class Staffmember(models.Model):
     class Meta:
         db_table = 'sos_staffmember'
 
-
 class Doctor(models.Model):
-    name = models.CharField(max_length=50)
+    name= models.CharField(max_length=50)
     dob = models.DateField(max_length=20)
-    mobile = models.BigIntegerField(default=0000000000)
-    expertise = models.CharField(max_length=50)
-    eid = models.IntegerField(default=0)
+    mobile= models.BigIntegerField(default=0000000000)
+    expertise=models.CharField(max_length=50)
+    eid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -390,20 +413,19 @@ class Doctor(models.Model):
             'dob': self.dob,
             'mobile': self.mobile,
             'expertise': self.expertise,
-            'eid': self.eid,
+            'eid':self.eid,
         }
         return data
 
     class Meta:
         db_table = 'sos_doctor'
 
-
 class Lead(models.Model):
     date = models.DateField(max_length=20)
     contactName = models.CharField(max_length=50)
     mobile = models.BigIntegerField(default=0)
-    status = models.CharField(max_length=50)
-    sid = models.IntegerField(default=0)
+    status= models.CharField(max_length=50)
+    sid=models.IntegerField(default=0)
 
     def to_json(self):
         data = {
@@ -419,7 +441,6 @@ class Lead(models.Model):
 
     class Meta:
         db_table = 'sos_lead'
-
 
 class TimeTable(models.Model):
     examTime = models.CharField(max_length=40)
@@ -446,19 +467,16 @@ class TimeTable(models.Model):
     class Meta:
         db_table = 'sos_timetable'
 
-
-class Staff(models.Model):
-    fullName = models.CharField(max_length=50)
-    joiningDate = models.DateField()
-    division = models.CharField(max_length=50)
-    previousEmployer = models.CharField(max_length=50)
-
+class Staff (models.Model):
+    fullName=models.CharField(max_length=50)
+    joiningDate=models.DateField()
+    division=models.CharField(max_length=50)
+    previousEmployer=models.CharField(max_length=50)
 
     class Meta:
-        db_table = 'sos_staff'
+        db_table='sos_staff'
 
 class Position(models.Model):
-    identifier = models.CharField(max_length=50)
     designation = models.CharField(max_length=50)
     openingDate = models.DateField()
     requiredExperience = models.IntegerField()
