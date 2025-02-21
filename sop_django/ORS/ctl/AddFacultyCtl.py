@@ -16,30 +16,43 @@ class AddFacultyCtl(BaseCtl):
 
         self.form["gender"] = request.POST.get('gender', '')
         self.form["college_ID"] = request.POST.get('college_ID', 0)
-        self.form["subject_ID"] = request.POST.get('subject_ID', 0)
         self.form["course_ID"] = request.POST.get('course_ID', 0)
+        self.form["subject_ID"] = request.POST.get('subject_ID', 0)
 
         if (params['id'] > 0):
             obj = self.get_service().get(params['id'])
             self.form["gender"] = obj.gender
             self.form["college_ID"] = obj.college_ID
-            self.form["subject_ID"] = obj.subject_ID
             self.form["course_ID"] = obj.course_ID
+            self.form["subject_ID"] = obj.subject_ID
 
         self.static_preload = {"Male": "Male", "Female": "Female"}
-        self.dynamic_preload = CollegeService().preload()
-        self.dynamic_preload = SubjectService().preload()
-        self.dynamic_preload = CourseService().preload()
 
-        self.form["preload"]["gender"] = HTMLUtility.get_list_from_dict('gender', self.form["gender"],
-                                                                        self.static_preload)
-        self.form["preload"]["college"] = HTMLUtility.get_list_from_objects('college_ID', self.form["college_ID"],
-                                                                               self.dynamic_preload)
-        self.form["preload"]["subject"] = HTMLUtility.get_list_from_objects('subject_ID', self.form["subject_ID"],
-                                                                               self.dynamic_preload)
-        self.form["preload"]["course"] = HTMLUtility.get_list_from_objects('course_ID', self.form["course_ID"],
-                                                                              self.dynamic_preload)
+        # Store each service's preload data separately
+        college_list = CollegeService().preload()
+        course_list = CourseService().preload()
+        subject_list = SubjectService().preload()
 
+        self.form["preload"]["gender"] = HTMLUtility.get_list_from_dict(
+            'gender',
+            self.form["gender"],
+            self.static_preload
+        )
+        self.form["preload"]["college"] = HTMLUtility.get_list_from_objects(
+            'college_ID',
+            self.form["college_ID"],
+            college_list
+        )
+        self.form["preload"]["course"] = HTMLUtility.get_list_from_objects(
+            'course_ID',
+            self.form["course_ID"],
+            course_list
+        )
+        self.form["preload"]["subject"] = HTMLUtility.get_list_from_objects(
+            'subject_ID',
+            self.form["subject_ID"],
+            subject_list
+        )
     def request_to_form(self, requestForm):
         self.form['id'] = requestForm['id']
         self.form['firstName'] = requestForm['firstName']

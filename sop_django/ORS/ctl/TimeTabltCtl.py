@@ -6,12 +6,51 @@ from service.forms import TimeTableForm
 from service.service.CourseService import CourseService
 from service.service.SubjectService import SubjectService
 from service.service.TimeTableService import TimeTableService
+from ..utility.HTMLUtility import HTMLUtility
 
 
 class TimeTableCtl(BaseCtl):
-    def preload(self, request):
-        self.course_List = CourseService().preload()
-        self.subject_List = SubjectService().preload()
+
+    def preload(self, request, params):
+
+        self.form["examTime"] = request.POST.get('examTime', '')
+        self.form["semester"] = request.POST.get('semester', '')
+        self.form["course_ID"] = request.POST.get('course_ID', 0)
+        self.form["subject_ID"] = request.POST.get('subject_ID', 0)
+
+        if (params['id'] > 0):
+            obj = self.get_service().get(params['id'])
+            self.form["examTime"] = obj.examTime
+            self.form["semester"] = obj.semester
+            self.form["course_ID"] = obj.course_ID
+            self.form["subject_ID"] = obj.subject_ID
+
+        examTime_list = {"9:00AM to 1:00PM": "9:00AM to 1:00PM", "2:00PM to 4:00PM": "2:00PM to 4:00PM","4:00PM to 7:00PM":"4:00PM to 7:00PM"}
+        semester_list = {"1": "1", "2": "2", "3": "3", "4": "4", "5": "5", "6": "6", "7": "7", "8": "8"}
+        # Store each service's preload data separately
+        course_list = CourseService().preload()
+        subject_list = SubjectService().preload()
+
+        self.form["preload"]["semester"] = HTMLUtility.get_list_from_dict(
+            'semester',
+            self.form["semester"],
+            semester_list
+        )
+        self.form["preload"]["examTime"] = HTMLUtility.get_list_from_dict(
+            'examTime',
+            self.form["examTime"],
+            examTime_list
+        )
+        self.form["preload"]["course"] = HTMLUtility.get_list_from_objects(
+            'course_ID',
+            self.form["course_ID"],
+            course_list
+        )
+        self.form["preload"]["subject"] = HTMLUtility.get_list_from_objects(
+            'subject_ID',
+            self.form["subject_ID"],
+            subject_list
+        )
 
     def request_to_form(self, requestForm):
         self.form['id'] = requestForm['id']
@@ -87,8 +126,7 @@ class TimeTableCtl(BaseCtl):
         if (params['id'] > 0):
             r = self.get_service().get(params['id'])
             self.model_to_form(r)
-        res = render(request, self.get_template(),
-                     {'form': self.form, 'courseList': self.course_List, 'subjectList': self.subject_List})
+        res = render(request, self.get_template(),{'form': self.form})
         return res
 
     def submit(self, request, params={}):
@@ -100,24 +138,21 @@ class TimeTableCtl(BaseCtl):
             if (q.count() > 0):
                 self.form['error'] = True
                 self.form['messege'] = "Exam time,Exam date,Subject name already exists"
-                return render(request, self.get_template(),
-                              {'form': self.form, 'courseList': self.course_List, 'subjectList': self.subject_List})
+                return render(request, self.get_template(),{'form': self.form})
             else:
                 r = self.form_to_model(TimeTable())
                 self.get_service().save(r)
                 self.form['id'] = r.id
                 self.form['error'] = False
                 self.form['messege'] = "DATA HAS BEEN UPDATED SUCCESSFULLY"
-                return render(request, self.get_template(),
-                              {'form': self.form, 'courseList': self.course_List, 'subjectList': self.subject_List})
+                return render(request, self.get_template(),{'form': self.form})
         else:
             r = self.form_to_model(TimeTable())
             self.get_service().save(r)
             self.form['id'] = r.id
             self.form['error'] = False
             self.form['messege'] = "DATA HAS BEEN SAVED SUCCESSFULLY"
-            return render(request, self.get_template(),
-                          {'form': self.form, 'courseList': self.course_List, 'subjectList': self.subject_List})
+            return render(request, self.get_template(),{'form': self.form})
 
     # Template html of TimeTable page
     def get_template(self):

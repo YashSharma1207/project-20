@@ -219,9 +219,14 @@ class Student(models.Model):
 class Subject(models.Model):
     subjectName = models.CharField(max_length=50)
     subjectDescription = models.CharField(max_length=50)
-
     course_ID = models.IntegerField()
     courseName = models.CharField(max_length=50)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.subjectName
 
     def to_json(self):
         data = {
@@ -450,6 +455,12 @@ class TimeTable(models.Model):
     course_ID = models.IntegerField()
     courseName = models.CharField(max_length=50)
     semester = models.CharField(max_length=50)
+
+    def get_key(self):
+        return str(self.id)
+
+    def get_value(self):
+        return self.subjectName
 
     def to_json(self):
         data = {
