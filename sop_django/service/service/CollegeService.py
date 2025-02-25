@@ -19,7 +19,7 @@ class CollegeService(BaseService):
         val = params.get("collegeName", None)
         if DataValidator.isNotNull(val):
             sql += " and collegeName = '" + val + "' "
-        sql += " limit %s,%s"
+        sql += " limit %s, %s"
         cursor = connection.cursor()
         print("----------", sql, pageNo, self.pageSize)
         params['index'] = ((params['pageNo'] - 1) * self.pageSize) + 1
