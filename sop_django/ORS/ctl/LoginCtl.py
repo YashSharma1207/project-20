@@ -53,7 +53,7 @@ class LoginCtl(BaseCtl):
 
     # Template html of Role page
     def get_template(self):
-        return "Login.html"
+        return "login.html"
 
     # Service of Role
     def get_service(self):

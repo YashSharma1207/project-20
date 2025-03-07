@@ -1,14 +1,9 @@
 from django.http import HttpResponse
 from abc import ABC, abstractmethod
-from django.shortcuts import render, redirect
-
-'''
-Base class is inherited by all application controllers
-'''
-
+from django.shortcuts import render
+    # contains static and dynamic preload data
 
 class BaseCtl(ABC):
-    # contains static and dynamic preload data
     static_preload = {}
     dynamic_preload = {}
 

@@ -17,7 +17,7 @@ class VehicleService(BaseService):
         sql = "select * from sos_vehicle where 1=1"
         val = params.get("vehicleName", None)
         if DataValidator.isNotNull(val):
-            sql += " and vehicleName = '" + val + "' "
+            sql += " and vehicleName like '" + val + "%%' "
         sql += " limit %s,%s"
         cursor = connection.cursor()
         print("----------", sql, pageNo, self.pageSize)

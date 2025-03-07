@@ -16,7 +16,7 @@ class SubjectService(BaseService):
         sql = "select * from sos_subject where 1=1"
         val  = params.get("subjectName", None)
         if (DataValidator.isNotNull(val)):
-            sql += " and subjectName = '"+val+"' "
+            sql += " and subjectName like '" + val + "%%' "
         sql += " limit %s,%s"
         cursor = connection.cursor()
         print("------------------>",sql,pageNo,self.pageSize)

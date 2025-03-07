@@ -17,7 +17,7 @@ class CourseService(BaseService):
         sql = "select * from sos_course where 1=1"
         val = params.get("courseName", None)
         if DataValidator.isNotNull(val):
-            sql += " and courseName = '" + val + "' "
+            sql += " and courseName like '" + val + "%%' "
         sql += " limit %s,%s"
         cursor = connection.cursor()
         cursor.execute(sql, [pageNo, self.pageSize])

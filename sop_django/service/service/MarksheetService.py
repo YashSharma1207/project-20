@@ -15,7 +15,7 @@ class MarksheetService(BaseService):
         sql ="select * from sos_marksheet where 1=1"
         val = params.get("rollNumber", None)
         if DataValidator.isNotNull(val):
-            sql+=" and rollNumber = '" +val+"' "
+            sql+=" and rollNumber like '" + val + "%%' "
         sql+=" limit %s,%s"
         cursor = connection.cursor()
         print("------------->" ,sql ,pageNo ,self.pageSize)

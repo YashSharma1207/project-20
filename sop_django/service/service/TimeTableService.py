@@ -21,7 +21,7 @@ class TimeTableService(BaseService):
         sql = "select * from sos_timetable where 1=1"
         val = params.get("semester", None)
         if (DataValidator.isNotNull(val)):
-            sql += " and semester = '" + val + "' "
+            sql += " and semester like '" + val + "%%' "
         sql += " limit %s,%s"
         cursor = connection.cursor()
         print("-------------->", sql, pageNo, self.pageSize)

@@ -39,7 +39,7 @@ class UserCtl(BaseCtl):
         self.form["id"] = requestForm["id"]
         self.form["firstName"] = requestForm["firstName"]
         self.form["lastName"] = requestForm["lastName"]
-        self.form["login_id"] = requestForm["login_id"]
+        self.form["login_id"] = requestForm["login_id"].strip()
         self.form["password"] = requestForm["password"]
         self.form["confirmpassword"] = requestForm["confirmpassword"]
         self.form["dob"] = requestForm["dob"]
@@ -98,11 +98,11 @@ class UserCtl(BaseCtl):
         if (DataValidator.isNull(self.form["lastName"])):
             inputError["lastName"] = " Last Name can not be null"
             self.form["error"] = True
-        if (DataValidator.isNull(self.form["login_id"])):
+        if (DataValidator.isNull(self.form["login_id"].strip())):
             inputError["login_id"] = " login can not be null"
             self.form["error"] = True
         else:
-            if (DataValidator.isemail(self.form['login_id'])):
+            if (DataValidator.isemail(self.form['login_id'].strip())):
                 inputError['login_id'] = "login ID must be like student@gmail.com"
                 self.form['error'] = True
 
