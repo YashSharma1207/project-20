@@ -38,6 +38,7 @@ class ForgetPasswordCtl(BaseCtl):
             emsg.to = [userList.login_id]
             emsg.subject = "Forget Password"
             mailResponse = EmailService.send(emsg, "forgotPassword", userList)
+            print("mail:",mailResponse)
             if mailResponse == 1:
                 self.form['error'] = False
                 self.form['messege'] = "PLEASE CHECK YOUR MAIL, YOUR PASSWORD HAS BEEN SENT SUCCESSFULLY"

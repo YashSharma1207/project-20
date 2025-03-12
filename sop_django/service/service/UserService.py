@@ -33,9 +33,13 @@ class UserService(BaseService):
     def search(self, params):
         pageNo = (params["pageNo"] - 1) * self.pageSize
         sql = "select * from sos_user where 1=1"
-        val = params.get("login_id", None)
-        if DataValidator.isNotNull(val):
-            sql += " and login_id like '" + val + "%%' "
+        val1 = params.get("login_id", None)
+        val2 = params.get("gender", None)
+        if DataValidator.isNotNull(val1):
+            sql += " and login_id like '" + val1 + "%%' "
+
+        elif DataValidator.isNotNull(val2):
+            sql += " and gender like '" + val2 + "%%' "
         sql += " limit %s,%s"
         cursor = connection.cursor()
         print("--------", sql, pageNo, self.pageSize)
