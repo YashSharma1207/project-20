@@ -90,6 +90,17 @@
             {% elif request.session.name == "Admin" %}
             </li>
 
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="/ORS/Employee/" id="navbardrop" data-toggle="dropdown">
+                    Employee
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/ORS/Employee/">Employee</a>
+                    <a class="dropdown-item" href="/ORS/EmployeeList/">EmployeeList</a>
+
+                </div>
+            </li>
+
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="/ORS/User/" id="navbardrop" data-toggle="dropdown">
@@ -174,6 +185,18 @@
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="/ORS/Role/"> <i class="fa fa-users"></i>Role</a>
                     <a class="dropdown-item" href="/ORS/RoleList/"><i class="fas fa-list"></i>RoleList</a>
+
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="/ORS/Test/" id="navbardrop" data-toggle="dropdown">
+                    <i class="fas fa-user" style="color:white;"></i>
+                    Test
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/ORS/Test/"> <i class="fas fa-user"></i>Test</a>
+                    <a class="dropdown-item" href="/ORS/TestList/"><i class="fas fa-list"></i>TestList</a>
 
                 </div>
             </li>
@@ -350,7 +373,6 @@
 
                 </div>
             </li>
-
 
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="/ORS/Student/" id="navbardrop" data-toggle="dropdown">

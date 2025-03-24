@@ -1,25 +1,25 @@
-from ..models import Staff
+from ..models import Test
 from ..utility.DataValidator import DataValidator
 from .BaseService import BaseService
 from django.db import connection
 
 
-class StaffService(BaseService):
+class TestService(BaseService):
 
     def search(self, params):
         print("Page No -->" ,params["pageNo"])
         pageNo = (params["pageNo" ]-1 )*self.pageSize
-        sql ="select * from sos_staff where 1=1"
-        val = params.get("fullName", None)
+        sql ="select * from sos_test where 1=1"
+        val = params.get("userName", None)
         if DataValidator.isNotNull(val):
-            sql+=" and fullName like '" +val+"%%' "
+            sql+=" and userName like '" +val+"%%' "
         sql+=" limit %s,%s"
         cursor = connection.cursor()
         print("------------->" ,sql ,pageNo ,self.pageSize)
         params['index'] = ((params['pageNo'] - 1) * self.pageSize) +1
         cursor.execute(sql ,[pageNo ,self.pageSize])
         result =cursor.fetchall()
-        columnName =("id" ,"fullName" ,"joiningDate" ,"division" ,"previousEmplyer")
+        columnName =("id" ,"firstName" ,"lastName" ,"userName")
         res ={
             "data" :[],
             "MaxId": 1,
@@ -34,4 +34,4 @@ class StaffService(BaseService):
 
 
     def get_model(self):
-        return Staff
+        return Test

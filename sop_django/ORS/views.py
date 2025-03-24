@@ -37,6 +37,10 @@ from .ctl.StaffCtl import StaffCtl
 from .ctl.StaffListCtl import StaffListCtl
 from .ctl.PositionCtl import PositionCtl
 from .ctl.PositionListCtl import PositionListCtl
+from .ctl.TestCtl import TestCtl
+from .ctl.TestListCtl import TestListCtl
+from .ctl.EmployeeCtl import EmployeeCtl
+from .ctl.EmployeeListCtl import EmployeeListCtl
 # Create your views here.
 
 @csrf_exempt

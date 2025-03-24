@@ -2,29 +2,32 @@ from django.shortcuts import render, redirect
 
 from ORS.ctl.BaseCtl import BaseCtl
 from service.models import Staff
+from service.service.EmployeeService import EmployeeService
 from service.service.StaffService import StaffService
 
 
-class StaffListCtl(BaseCtl):
+class EmployeeListCtl(BaseCtl):
     count = 1
 
     def request_to_form(self, requestForm):
         self.form["fullName"] = requestForm.get("fullName", None)
-        self.form["joiningDate"] = requestForm.get("joiningDate", None)
-        self.form["division"] = requestForm.get("division", None)
-        self.form["previousEmployer"] = requestForm.get("previousEmployer", None)
+        self.form["userName"] = requestForm.get("userName", None)
+        self.form["password"] = requestForm.get("password", None)
+        self.form["gender"] = requestForm.get("gender", None)
+        self.form["birthDate"] = requestForm.get("birthDate", None)
+        self.form["contactNumber"] = requestForm.get("contactNumber", None)
         self.form["ids"] = requestForm.getlist("ids", None)
 
     def display(self, request, params={}):
-        StaffListCtl.count = self.form['pageNo']
+        EmployeeListCtl.count = self.form['pageNo']
         records = self.get_service().search(self.form)
         self.page_list = records['data']
         res = render(request, self.get_template(), {'pageList': self.page_list, 'form': self.form})
         return res
 
     def next(self, request, params={}):
-        StaffListCtl.count += 1
-        self.form['pageNo'] = StaffListCtl.count
+        EmployeeListCtl.count += 1
+        self.form['pageNo'] = EmployeeListCtl.count
         records = self.get_service().search(self.form)
         self.page_list = records['data']
         self.form['LastId'] = Staff.objects.last().id
@@ -32,19 +35,19 @@ class StaffListCtl(BaseCtl):
         return res
 
     def previous(self, request, params={}):
-        StaffListCtl.count -= 1
-        self.form['pageNo']=StaffListCtl.count
+        EmployeeListCtl.count -= 1
+        self.form['pageNo']=EmployeeListCtl.count
         records=self.get_service().search(self.form)
         self.page_list=records['data']
         res=render(request,self.get_template(),{'pageList':self.page_list,'form':self.form})
         return res
 
     def new(self, request, params={}):
-        res=redirect("/Staff/")
+        res=redirect("/Employee/")
         return res
 
     def submit(self,request,params={}):
-        StaffListCtl.count=1
+        EmployeeListCtl.count=1
         records=self.get_service().search(self.form)
         self.page_list=records['data']
         if self.page_list==[]:
@@ -73,8 +76,7 @@ class StaffListCtl(BaseCtl):
             return render(request, self.get_template(), {'pageList': self.page_list, 'form': self.form})
 
     def get_service(self):
-        return StaffService()
+        return EmployeeService()
 
     def get_template(self):
-        return "StaffList.html"
-
+        return "EmployeeList.html"

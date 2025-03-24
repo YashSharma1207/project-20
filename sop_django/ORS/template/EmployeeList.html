@@ -44,13 +44,13 @@
 </head>
 
 <body style="background-color:whitesmoke;background-image:url('../../static/images/list_background.png');background-repeat: no-repeat;background-size: cover;width: 100%;">
-    <h1 align="center">Role List</h1>
+    <h1 align="center">Employee List</h1>
 <form method="POST">
     <div class="container-fluid">
     <div class="form-group row">
         <div class="col-lg-5"></div>
         <div class="col-lg-2">
-            <input class="form-control" name="fullName" value="{{ form.fullName }}" placeholder="Enter Full Name">
+            <input class="form-control" name="userName" value="{{ form.userName }}" placeholder="Enter User Name">
         </div>
 
         <div class="col-lg-2">
@@ -79,9 +79,11 @@
                         </th>
                         <th scope="row">S.NO.</th>
                         <th scope="row">Full Name</th>
-                        <th scope="row">Joining Date</th>
-                        <th scope="row">Division</th>
-                        <th scope="row">Previous Employer</th>
+                        <th scope="row">User Name</th>
+                        <th scope="row">Password</th>
+                        <th scope="row">Gender</th>
+                        <th scope="row">DOB</th>
+                        <th scope="row">Contact Number</th>
                         <th scope="row">EDIT</th>
                     </thead>
 
@@ -93,10 +95,12 @@
                                 </td>
                                 <td>{{ form.index|add:forloop.counter0 }}</td>
                                 <td>{{ e.fullName }}</td>
-                                <td>{{ e.joiningDate }}</td>
-                                <td>{{ e.division }}</td>
-                                <td>{{ e.previousEmployer }}</td>
-                                <td><a href="/ORS/Staff/Edit/{{ e.id }}">Edit
+                                <td>{{ e.userName }}</td>
+                                <td>{{ e.password }}</td>
+                                <td>{{ e.gender }}</td>
+                                <td>{{ e.birthDate }}</td>
+                                <td>{{ e.contactNumber }}</td>
+                                <td><a href="/ORS/Employee/Edit/{{ e.id }}">Edit
                                     <font data-target="#update" data-toggle="modal" class="">
                                         <i class="fas fa-edit"></i>
                                     </font>
@@ -107,7 +111,7 @@
                 </table>
 {% if form.mesg %}
     <b style="font-size:x-large;margin-left: 550px;">{{form.mesg}}</b><br>
-    <a class="btn btn-primary" href="/ORS/StaffList/" style="margin-left:600px;">Back</a><br><br>
+    <a class="btn btn-primary" href="/ORS/EmployeeList/" style="margin-left:600px;">Back</a><br><br>
 {% else %}
 
 <div class="row">
@@ -126,7 +130,7 @@
         <input type="submit" class="btn btn-danger" name="operation" value="Delete">
     </div>
     <div class="col-lg-2">
-        <a href="/ORS/Staff/">
+        <a href="/ORS/Employee/">
             <font class="btn btn-success" data-target="##update" data-toggle="modal">ADD
                 <i class="fas fa-plus-circle"></i></font>
         </a>
