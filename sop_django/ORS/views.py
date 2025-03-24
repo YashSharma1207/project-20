@@ -39,8 +39,8 @@ from .ctl.PositionCtl import PositionCtl
 from .ctl.PositionListCtl import PositionListCtl
 from .ctl.TestCtl import TestCtl
 from .ctl.TestListCtl import TestListCtl
-from .ctl.EmployeeCtl import EmployeeCtl
-from .ctl.EmployeeListCtl import EmployeeListCtl
+from .ctl.FavoriteListCtl import FavoriteListCtl
+from .ctl.FavoriteListListCtl import FavoriteListListCtl
 # Create your views here.
 
 @csrf_exempt

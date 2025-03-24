@@ -517,13 +517,9 @@ class Test(models.Model):
         db_table = 'sos_test'
 
 
-class Employee(models.Model):
-    fullName = models.CharField(max_length=50)
-    userName = models.CharField(max_length=50)
-    password = models.CharField(max_length=20)
-    gender = models.CharField(max_length=50, default='')
-    birthDate = models.DateField(max_length=20)
-    contactNumber = models.CharField(max_length=50, default='')
+class FavoriteList(models.Model):
+    product = models.CharField(max_length=50)
+    addedDate = models.DateField()
 
     class Meta:
-        db_table = 'sos_employee'
+        db_table = 'sos_favoritelist'
